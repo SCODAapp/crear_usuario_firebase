@@ -4,6 +4,9 @@ import { getAuth } from 'firebase-admin/auth';
 // Cargar credenciales desde una variable de entorno
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
 
+// Reemplazar \\n por saltos de línea reales \n
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+
 // Inicializar Firebase solo una vez
 if (!getApps().length) {
   initializeApp({
@@ -23,7 +26,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Falta el email en la solicitud' });
   }
 
-  const password = Math.random().toString(36).slice(-8); // genera una contraseña aleatoria de 8 caracteres
+  const password = Math.random().toString(36).slice(-8); // genera contraseña aleatoria de 8 caracteres
 
   try {
     const userRecord = await getAuth().createUser({
